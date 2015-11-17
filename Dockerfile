@@ -30,11 +30,18 @@ RUN apt-get install -y autoconf apache2-dev libtool libxml2-dev libbz2-dev libge
 # Install postgresql and postgis
 RUN apt-get install -y postgresql-9.3-postgis-2.1 postgresql-contrib postgresql-server-dev-9.3
 
+# Install osm2pgsql dependencies
+RUN apt-get install -y make cmake g++ libboost-dev libboost-system-dev \
+  libboost-filesystem-dev libexpat1-dev zlib1g-dev \
+  libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2 \
+  liblua5.2-dev
+
 # Install osm2pgsql
 RUN cd /tmp && git clone git://github.com/openstreetmap/osm2pgsql.git
 RUN cd /tmp/osm2pgsql && \
-    ./autogen.sh && \
-    ./configure && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
     make && make install
 
 # Install the Mapnik library
